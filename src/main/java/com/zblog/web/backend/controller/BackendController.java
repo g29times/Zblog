@@ -33,78 +33,78 @@ import com.zblog.web.support.WebContextFactory;
 
 @Controller
 @RequestMapping("/backend")
-public class BackendController{
-  @Autowired
-  private UserService userService;
-  @Autowired
-  private PostManager postManager;
-  @Autowired
-  private CommentManager commentManager;
-  @Autowired
-  private PostService postService;
-  @Autowired
-  private CommentService commentService;
-  @Autowired
-  private UploadService uploadService;
+public class BackendController {
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PostManager postManager;
+    @Autowired
+    private CommentManager commentManager;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private CommentService commentService;
+    @Autowired
+    private UploadService uploadService;
 
-  @RequiresRoles(value = { "admin", "editor" }, logical = Logical.OR)
-  @RequestMapping(value = "/index", method = RequestMethod.GET)
-  public String index(Model model){
-    model.addAttribute("osInfo", OSInfo.getCurrentOSInfo());
+    @RequiresRoles(value = {"admin", "editor"}, logical = Logical.OR)
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index(Model model) {
+        model.addAttribute("osInfo", OSInfo.getCurrentOSInfo());
 
     /* 基本站点统计信息 */
-    model.addAttribute("userCount", userService.count());
-    model.addAttribute("postCount", postService.count());
-    model.addAttribute("commentCount", commentService.count());
-    model.addAttribute("uploadCount", uploadService.count());
+        model.addAttribute("userCount", userService.count());
+        model.addAttribute("postCount", postService.count());
+        model.addAttribute("commentCount", commentService.count());
+        model.addAttribute("uploadCount", uploadService.count());
 
-    model.addAttribute("posts", postManager.listRecent(10, PostConstants.POST_CREATOR_ALL));
-    model.addAttribute("comments", commentManager.listRecent());
-    return "backend/index";
-  }
-
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public String login(String msg, Model model){
-    if(WebContextFactory.get().isLogon())
-      return "redirect:/backend/index";
-
-    if("logout".equals(msg)){
-      model.addAttribute("msg", "您已登出。");
-    }else if("unauthenticated".equals(msg)){
-      model.addAttribute("msg", "你没有当前操作权限");
-    }
-    return "backend/login";
-  }
-
-  @RequestMapping(value = "/logout")
-  public String logout(HttpServletRequest request, HttpServletResponse response){
-    CookieRemberManager.logout(request, response);
-    SecurityUtils.getSubject().logout();
-    CookieUtil cookieUtil = new CookieUtil(request, response);
-    cookieUtil.removeCokie(Constants.COOKIE_CSRF_TOKEN);
-    return "redirect:/backend/login?msg=logout";
-  }
-
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  public String dashboard(LoginForm form, HttpServletRequest request, HttpServletResponse response){
-    MapContainer result = LoginFormValidator.validateLogin(form);
-    if(!result.isEmpty()){
-      request.setAttribute("msg", result.get("msg"));
-      return "backend/login";
+        model.addAttribute("posts", postManager.listRecent(10, PostConstants.POST_CREATOR_ALL));
+        model.addAttribute("comments", commentManager.listRecent());
+        return "backend/index";
     }
 
-    User user = userService.login(form.getUsername(), form.getPassword());
-    if(user == null){
-      request.setAttribute("msg", "用户名密码错误");
-      return "backend/login";
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(String msg, Model model) {
+        if (WebContextFactory.get().isLogon())
+            return "redirect:/backend/index";
+
+        if ("logout".equals(msg)) {
+            model.addAttribute("msg", "您已登出。");
+        } else if ("unauthenticated".equals(msg)) {
+            model.addAttribute("msg", "你没有当前操作权限");
+        }
+        return "backend/login";
     }
 
-    SecurityUtils.getSubject().login(new StatelessToken(user.getId(), user.getPassword()));
-    CookieUtil cookieUtil = new CookieUtil(request, response);
-    cookieUtil.setCookie(Constants.COOKIE_USER_NAME, form.getUsername(), false, 7 * 24 * 3600);
-    CookieRemberManager.loginSuccess(request, response, user.getId(), user.getPassword(), form.isRemeber());
+    @RequestMapping(value = "/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        CookieRemberManager.logout(request, response);
+        SecurityUtils.getSubject().logout();
+        CookieUtil cookieUtil = new CookieUtil(request, response);
+        cookieUtil.removeCokie(Constants.COOKIE_CSRF_TOKEN);
+        return "redirect:/backend/login?msg=logout";
+    }
 
-    return "redirect:" + StringUtils.emptyDefault(form.getRedirectURL(), "/backend/index");
-  }
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String dashboard(LoginForm form, HttpServletRequest request, HttpServletResponse response) {
+        MapContainer result = LoginFormValidator.validateLogin(form);
+        if (!result.isEmpty()) {
+            request.setAttribute("msg", result.get("msg"));
+            return "backend/login";
+        }
+
+        User user = userService.login(form.getUsername(), form.getPassword());
+        if (user == null) {
+            request.setAttribute("msg", "用户名密码错误");
+            return "backend/login";
+        }
+
+        SecurityUtils.getSubject().login(new StatelessToken(user.getId(), user.getPassword()));
+        CookieUtil cookieUtil = new CookieUtil(request, response);
+        cookieUtil.setCookie(Constants.COOKIE_USER_NAME, form.getUsername(), false, 7 * 24 * 3600);
+        CookieRemberManager.loginSuccess(request, response, user.getId(), user.getPassword(), form.isRemeber());
+
+        return "redirect:" + StringUtils.emptyDefault(form.getRedirectURL(), "/backend/index");
+    }
 
 }

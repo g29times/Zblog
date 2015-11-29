@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="zblog" uuid="14861777-bf87-4ebd-84c1-092e3b643c68">
+      <user-name>root</user-name>
+      <user-password>dfd8dfc5dfc5dfde</user-password>
+      <schema-pattern>zblog.*</schema-pattern>
+      <default-schemas>zblog.*</default-schemas>
+    </data-source>
+  </component>
+</project>

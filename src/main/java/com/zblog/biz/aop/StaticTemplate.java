@@ -28,120 +28,146 @@ import freemarker.template.TemplateHashModel;
 
 /**
  * 静态化组件
- * 
+ *
  * @author zhou
- * 
  */
 @Component
-public class StaticTemplate{
-  private static final Logger logger = LoggerFactory.getLogger(StaticTemplate.class);
-  @Autowired
-  private CategoryManager categoryManager;
-  @Autowired
-  private PostManager postManager;
-  @Autowired
-  private LinkService linksService;
-  @Autowired
-  private PostService postService;
-  @Autowired
-  private OptionsService optionsService;
-  @Autowired
-  private TagService tagService;
+public class StaticTemplate {
+    private static final Logger logger = LoggerFactory.getLogger(StaticTemplate.class);
+    @Autowired
+    private CategoryManager categoryManager;
+    @Autowired
+    private PostManager postManager;
+    @Autowired
+    private LinkService linksService;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private OptionsService optionsService;
+    @Autowired
+    private TagService tagService;
 
-  /**
-   * 静态化导航栏
-   */
-  public void staticHeader(){
-    MapContainer map = new MapContainer();
-    map.put("domain", WebConstants.getDomain());
-    map.put("title", optionsService.getOptionValue(OptionConstants.TITLE));
-    map.put("subtitle", optionsService.getOptionValue(OptionConstants.SUBTITLE));
-    map.put("categorys", categoryManager.listAsTree());
-    map.put("pages", postManager.listPageAsTree());
+    /**
+     * 静态化导航栏
+     */
+    public void staticHeader() {
+        MapContainer map = new MapContainer();
+        map.put("domain", WebConstants.getDomain());
+        map.put("title", optionsService.getOptionValue(OptionConstants.TITLE));
+        map.put("subtitle", optionsService.getOptionValue(OptionConstants.SUBTITLE));
+        map.put("categorys", categoryManager.listAsTree());
+        map.put("pages", postManager.listPageAsTree());
 
-    FreeMarkerUtils.doProcessTemplate("/header.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
-        + "/common/header.html"), map);
+        FreeMarkerUtils.doProcessTemplate("/header.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
+                + "/common/header.html"), map);
 
-    logger.info("staticHeader");
-  }
-
-  /**
-   * 静态化标签云
-   */
-  private void staticCloudTags(){
-    MapContainer map = new MapContainer();
-    map.put("tags", tagService.list());
-    map.put("domain", WebConstants.getDomain());
-    try{
-      BeansWrapper wrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_22).build();
-      TemplateHashModel thm = (TemplateHashModel) wrapper.getStaticModels().get(NumberUtils.class.getName());
-      map.put("NumberUtils", thm);
-    }catch(Exception e){
-      logger.error("staticCloudTags init NumberUtils error", e);
+        logger.info("staticHeader");
     }
 
-    FreeMarkerUtils.doProcessTemplate("/tagcloud.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
-        + "/common/tagcloud.html"), map);
-    logger.info("staticCloudTags");
-  }
+    /**
+     * 静态化标签云
+     */
+    private void staticCloudTags() {
+        MapContainer map = new MapContainer();
+        map.put("tags", tagService.list());
+        map.put("domain", WebConstants.getDomain());
+        try {
+            BeansWrapper wrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_22).build();
+            TemplateHashModel thm = (TemplateHashModel) wrapper.getStaticModels().get(NumberUtils.class.getName());
+            map.put("NumberUtils", thm);
+        } catch (Exception e) {
+            logger.error("staticCloudTags init NumberUtils error", e);
+        }
 
-  /**
-   * 静态化文章归档
-   */
-  private void staticArchive(){
-    MapContainer map = new MapContainer();
-    map.put("archives", postService.listArchive());
-    map.put("domain", WebConstants.getDomain());
-
-    FreeMarkerUtils.doProcessTemplate("/archive.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
-        + "/common/archive.html"), map);
-
-    logger.info("staticArchive");
-  }
-
-  /**
-   * 静态化友情链接
-   */
-  public void staticLinks(){
-    MapContainer map = new MapContainer();
-    map.put("links", linksService.list());
-
-    FreeMarkerUtils.doProcessTemplate("/link.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
-        + "/common/link.html"), map);
-    logger.info("staticLinks");
-  }
-
-  /**
-   * 静态化文章,同时静态化最近发表or顶部导航页面栏
-   * 
-   * @param post
-   */
-  public void postInsertOrUpdate(Post post){
-    staticRecentOrHeader(PostConstants.TYPE_POST.equals(post.getType()));
-  }
-
-  public void postRemove(String postid, String postType){
-    staticRecentOrHeader(PostConstants.TYPE_POST.equals(postType));
-  }
-
-  /**
-   * 静态化最近发表或者静态还顶部导航
-   * 
-   * @param ispost
-   */
-  private void staticRecentOrHeader(boolean ispost){
-    if(ispost){
-      MapContainer param = new MapContainer("domain", WebConstants.getDomain());
-      param.put("posts", postManager.listRecent(10, PostConstants.POST_CREATOR_ALL));
-      FreeMarkerUtils.doProcessTemplate("/recent.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
-          + "/common/recent.html"), param);
-      logger.info("staticRecent");
-
-      staticCloudTags();
-      staticArchive();
-    }else{
-      staticHeader();
+        FreeMarkerUtils.doProcessTemplate("/tagcloud.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
+                + "/common/tagcloud.html"), map);
+        logger.info("staticCloudTags");
     }
-  }
 
+    /**
+     * 静态化文章归档
+     */
+    private void staticArchive() {
+        MapContainer map = new MapContainer();
+        map.put("archives", postService.listArchive());
+        map.put("domain", WebConstants.getDomain());
+
+        FreeMarkerUtils.doProcessTemplate("/archive.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
+                + "/common/archive.html"), map);
+
+        logger.info("staticArchive");
+    }
+
+    /**
+     * 静态化友情链接
+     */
+    public void staticLinks() {
+        MapContainer map = new MapContainer();
+        map.put("links", linksService.list());
+
+        FreeMarkerUtils.doProcessTemplate("/link.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
+                + "/common/link.html"), map);
+        logger.info("staticLinks");
+    }
+
+    /**
+     * 静态化文章,同时静态化最近发表or顶部导航页面栏
+     *
+     * @param post
+     */
+    public void postInsertOrUpdate(Post post) {
+        staticRecentOrHeader(PostConstants.TYPE_POST.equals(post.getType()));
+    }
+
+    public void postRemove(String postid, String postType) {
+        staticRecentOrHeader(PostConstants.TYPE_POST.equals(postType));
+    }
+
+    /**
+     * 静态化最近发表或者静态还顶部导航
+     *
+     * @param ispost
+     */
+    private void staticRecentOrHeader(boolean ispost) {
+        if (ispost) {
+            MapContainer param = new MapContainer("domain", WebConstants.getDomain());
+            param.put("posts", postManager.listRecent(10, PostConstants.POST_CREATOR_ALL));
+            FreeMarkerUtils.doProcessTemplate("/recent.html", new File(WebConstants.APPLICATION_PATH, WebConstants.PREFIX
+                    + "/common/recent.html"), param);
+            logger.info("staticRecent");
+
+            staticCloudTags();
+            staticArchive();
+        } else {
+            staticHeader();
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(StaticTemplate.class.getResource(""));
+        System.out.println(StaticTemplate.class.getResource("/"));
+        System.out.println(StaticTemplate.class.getResource("test"));
+        System.out.println(StaticTemplate.class.getResource("../aop/test"));
+        System.out.println(StaticTemplate.class.getResource("../aop"));
+        System.out.println();
+
+        System.out.println(StaticTemplate.class.getResource("").getPath());
+        try {
+            File f0 = new File(StaticTemplate.class.getResource("test").getPath());
+            System.out.println(f0.getAbsolutePath());
+            File f1 = new File(StaticTemplate.class.getResource("test").toURI());
+            System.out.println(f1.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println();
+
+        System.out.println(StaticTemplate.class.getResource("test.txt"));
+        File f = new File(StaticTemplate.class.getResource("test.txt").getFile());
+        System.out.println(f.getAbsolutePath());
+
+        System.out.println();
+        System.out.println(StaticTemplate.class.getClassLoader().getResource(""));
+        System.out.println(StaticTemplate.class.getClassLoader().getResource("/"));
+    }
 }

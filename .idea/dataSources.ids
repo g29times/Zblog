@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="zblog" uuid="14861777-bf87-4ebd-84c1-092e3b643c68">
+    <database-info product="MySQL" version="5.7.9-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.27 ( Revision: alexander.soklakov@oracle.com-20131021093118-gtm1bh1vb450xipt )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="zblog"/>
+    <table name="category" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="25" scale="0" nullable="false" jdbcType="12"/>
+      <column name="leftv" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="rightv" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="visible" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="index_post_category" table="post" schema="" catalog="zblog" columns="categoryid"/>
+    </table>
+    <table name="comment" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="postid" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="parent" sqlType="VARCHAR" precision="19" scale="0" nullable="true" jdbcType="12"/>
+      <column name="creator" sqlType="VARCHAR" precision="25" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="url" sqlType="VARCHAR" precision="80" scale="0" nullable="false" jdbcType="12"/>
+      <column name="agent" sqlType="VARCHAR" precision="120" scale="0" nullable="false" jdbcType="12"/>
+      <column name="ip" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
+      <column name="content" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <column name="status" sqlType="ENUM" precision="7" scale="0" nullable="false" jdbcType="1"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="index_comment" columns="parent" ref-table="comment" ref-schema="" ref-catalog="zblog" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <foreign-key name="index_comment_post" columns="postid" ref-table="post" ref-schema="" ref-catalog="zblog" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <exported-key name="index_comment" table="comment" schema="" catalog="zblog" columns="parent"/>
+      <index name="index_comment_post" unique="false" columns="postid"/>
+      <index name="index_parent" unique="false" columns="parent"/>
+    </table>
+    <table name="link" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="80" scale="0" nullable="false" jdbcType="12"/>
+      <column name="url" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="notes" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="visible" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <column name="creator" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="options" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="value" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="post" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="title" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="excerpt" sqlType="VARCHAR" precision="350" scale="0" nullable="true" jdbcType="12"/>
+      <column name="content" sqlType="MEDIUMTEXT" precision="16777215" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="type" sqlType="ENUM" precision="5" scale="0" nullable="false" jdbcType="1"/>
+      <column name="parent" sqlType="VARCHAR" precision="19" scale="0" nullable="true" jdbcType="12"/>
+      <column name="categoryid" sqlType="VARCHAR" precision="19" scale="0" nullable="true" jdbcType="12"/>
+      <column name="pstatus" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
+      <column name="cstatus" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
+      <column name="ccount" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="rcount" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="creator" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="lastUpdate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="index_post_category" columns="categoryid" ref-table="category" ref-schema="" ref-catalog="zblog" ref-columns="id" update-rule="0" delete-rule="3" deferrability="2"/>
+      <foreign-key name="index_post_user" columns="creator" ref-table="user" ref-schema="" ref-catalog="zblog" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="index_comment_post" table="comment" schema="" catalog="zblog" columns="postid"/>
+      <exported-key name="tag_post_index" table="tag" schema="" catalog="zblog" columns="postid"/>
+      <exported-key name="index_upload_post" table="upload" schema="" catalog="zblog" columns="postid"/>
+      <index name="index_post_category" unique="false" columns="categoryid"/>
+      <index name="index_post_user" unique="false" columns="creator"/>
+    </table>
+    <table name="tag" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
+      <column name="postid" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="tag_post_index" columns="postid" ref-table="post" ref-schema="" ref-catalog="zblog" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+    </table>
+    <table name="upload" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="postid" sqlType="VARCHAR" precision="19" scale="0" nullable="true" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="80" scale="0" nullable="false" jdbcType="12"/>
+      <column name="path" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="creator" sqlType="VARCHAR" precision="25" scale="0" nullable="false" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="index_upload_post" columns="postid" ref-table="post" ref-schema="" ref-catalog="zblog" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="index_upload_post" unique="false" columns="postid"/>
+    </table>
+    <table name="user" schema="" catalog="zblog" type="TABLE">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="nickName" sqlType="VARCHAR" precision="25" scale="0" nullable="false" jdbcType="12"/>
+      <column name="realName" sqlType="VARCHAR" precision="25" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="status" sqlType="VARCHAR" precision="10" scale="0" nullable="false" jdbcType="12"/>
+      <column name="role" sqlType="ENUM" precision="11" scale="0" nullable="false" jdbcType="1"/>
+      <column name="description" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="creator" sqlType="VARCHAR" precision="15" scale="0" nullable="true" jdbcType="12"/>
+      <column name="lastUpdate" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="index_post_user" table="post" schema="" catalog="zblog" columns="creator"/>
+      <index name="unique_name" unique="true" columns="nickName"/>
+    </table>
+    <table name="view_category" schema="" catalog="zblog" type="VIEW">
+      <column name="id" sqlType="VARCHAR" precision="19" scale="0" nullable="false" jdbcType="12"/>
+      <column name="name" sqlType="VARCHAR" precision="25" scale="0" nullable="false" jdbcType="12"/>
+      <column name="level" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" def="MA=="/>
+      <column name="visible" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+    </table>
+  </data-source>
+</component>

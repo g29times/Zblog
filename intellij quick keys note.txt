@@ -1,0 +1,50 @@
+快速生成：
+psvm : main
+sout : print
+ctrl + j : 自动代码汇总
+Ctrl + Shift+Space : 自动补全代码
+Ctrl + 空格 : 代码提示
+Ctrl + Alt+Space : 类名或接口名提示
+Ctrl + P : 方法参数提示
+Ctrl + H : 类结构图
+
+快捷键：
+alt + insert : 生成
+alt + / : 代码提示
+ctrl + alt + o : 组织导入
+alt + enter : 导入包,自动修正,解决编译问题
+
+alt + 1 : 工程面板
+ctrl + x : 删除行
+ctrl + alt + l : 代码整洁
+doubli click shift : 全文检索
+ctrl + n : 查找类
+ctrl + shift + n : 查找文件
+alt + f7 : 查找引用链
+ctrl + shift + u : 大小写转换
+
+http://www.cnblogs.com/bluestorm/archive/2013/05/20/3087889.html
+http://www.blogjava.net/rockblue1988/archive/2014/10/24/418994.html
+http://lavasoft.blog.51cto.com/62575/97730
+http://www.ituring.com.cn/article/37792
+
+配置server
+http://jingyan.baidu.com/album/0a52e3f43d9f69bf62ed72f9.html?picindex=6
+
+maven本地仓库维护指南
+1 安装配置mvn
+2 准备jar包 path=E:\REPOSITORY\maven\repository\IKAnalyzer\IKAnalyzer\2012FF_u1\IKAnalyzer2012FF_u1.jar
+3 查找原pom
+    例
+        <dependency>
+              <groupId>IKAnalyzer</groupId>
+              <artifactId>IKAnalyzer</artifactId>
+              <version>2012FF_u1</version>
+        </dependency>
+4 执行 mvn install:install-file -Dfile=path -DgroupId=IKAnalyzer -DartifactId=IKAnalyzer -Dversion=2012FF_u1 -Dpackaging=jar
+5 创建位置在 mvn 的原始repository
+6 可以移动、配置repository
+参考
+http://blog.csdn.net/beyondlpf/article/details/8592089
+http://www.blogjava.net/fancydeepin/archive/2012/06/12/380605.html
+http://www.cnblogs.com/jifeng/p/4658765.html

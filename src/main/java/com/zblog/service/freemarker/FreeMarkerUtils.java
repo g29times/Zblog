@@ -15,49 +15,58 @@ import freemarker.cache.NullCacheStorage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class FreeMarkerUtils{
-  private static final Logger logger = LoggerFactory.getLogger(FreeMarkerUtils.class);
+public class FreeMarkerUtils {
+    private static final Logger logger = LoggerFactory.getLogger(FreeMarkerUtils.class);
 
-  static Configuration config;
+    static Configuration config;
 
-  static{
-    try{
-      config = new Configuration(Configuration.VERSION_2_3_22);
-      config.setCacheStorage(new NullCacheStorage());
-      config.setAutoFlush(false);
+    static {
+        try {
+            config = new Configuration(Configuration.VERSION_2_3_22);
+            config.setCacheStorage(new NullCacheStorage());
+            config.setAutoFlush(false);
       /* 不产生指令造成的空白行 */
-      config.setWhitespaceStripping(true);
-      config.setOutputEncoding(Constants.ENCODING_UTF_8.name());
+            config.setWhitespaceStripping(true);
+            config.setOutputEncoding(Constants.ENCODING_UTF_8.name());
       /* 注:设置中文环境,有日期格式化操作 */
-      config.setLocale(Constants.LOCALE_CHINA);
-      URL uri = FreeMarkerUtils.class.getResource("ftl");
-      config.setDirectoryForTemplateLoading(new File(uri.toURI()));
-    }catch(Exception e){
-      throw new ExceptionInInitializerError(e);
+            config.setLocale(Constants.LOCALE_CHINA);
+//            URL uri = FreeMarkerUtils.class.getResource("ftl");
+//            config.setDirectoryForTemplateLoading(new File(uri.toURI()));
+            String uri = FreeMarkerUtils.class.getResource("").getPath();
+            config.setDirectoryForTemplateLoading(new File(uri + "ftl"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ExceptionInInitializerError(e);
+        }
     }
-  }
 
-  public static boolean doProcessTemplate(String templateFileName, File out, Object param){
-    boolean result = true;
-    OutputStreamWriter writer = null;
-    try{
-      Template template = config.getTemplate(templateFileName, Constants.ENCODING_UTF_8.name());
-      File parent = out.getParentFile();
-      if(!parent.exists())
-        parent.mkdirs();
-      writer = new OutputStreamWriter(new FileOutputStream(out), Constants.ENCODING_UTF_8);
-      template.process(param, writer);
-    }catch(Exception e){
-      logger.error("doProcessTemplate error-->" + templateFileName + " -out " + out.getAbsolutePath() + " param-->"
-          + param);
-      result = false;
+    public static boolean doProcessTemplate(String templateFileName, File out, Object param) {
+        boolean result = true;
+        OutputStreamWriter writer = null;
+        try {
+            Template template = config.getTemplate(templateFileName, Constants.ENCODING_UTF_8.name());
+            File parent = out.getParentFile();
+            if (!parent.exists())
+                parent.mkdirs();
+            writer = new OutputStreamWriter(new FileOutputStream(out), Constants.ENCODING_UTF_8);
+            template.process(param, writer);
+        } catch (Exception e) {
+            logger.error("doProcessTemplate error-->" + templateFileName + " -out " + out.getAbsolutePath() + " param-->"
+                    + param);
+            result = false;
       /* 静态化失败,则删除文件 */
-      out.delete();
-    }finally{
-      IOUtils.closeQuietly(writer);
+            out.delete();
+        } finally {
+            IOUtils.closeQuietly(writer);
+        }
+
+        return result;
     }
 
-    return result;
-  }
-
+    public static void main(String[] args) {
+        System.out.println(FreeMarkerUtils.class.getResource(""));
+        System.out.println(FreeMarkerUtils.class.getResource("/"));
+        System.out.println(FreeMarkerUtils.class.getResource("ftl"));
+        System.out.println(FreeMarkerUtils.class.getResource("../freemarker/ftl"));
+    }
 }
